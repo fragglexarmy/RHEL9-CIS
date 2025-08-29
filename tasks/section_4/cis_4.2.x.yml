@@ -41,3 +41,26 @@
   loop:
     - rule family="ipv4" source address="127.0.0.1" destination not address="127.0.0.1" drop
     - rule family="ipv6" source address="::1" destination not address="::1" drop
+
+# ---- Added by AROCK - START custom requirements
+
+- name:  "4.2.2 | PATCH | Remove unrequired services in rules | firewalld"
+  ansible.posix.firewalld:
+    zone: "{{ rhel9cis_default_zone }}"
+    service: "{{item}}"
+    state: disabled
+    permanent: true
+    immediate: true
+  loop:
+    - cockpit
+    - dhcpv6-client
+    - mdns
+    - samba-client
+
+- name: "4.2.2 | PATCH | Change the default zone | firewalld"
+  ansible.builtin.command: firewall-cmd --set-default-zone={{ rhel9cis_default_zone }}
+  register: default_zone_set
+  changed_when:
+    - '"ZONE_ALREADY_SET" not in default_zone_set.stderr'
+
+# ---- Added by AROCK - END
