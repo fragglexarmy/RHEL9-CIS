@@ -267,6 +267,84 @@
   vars:
     warn_control_id: '1.1.1.9'
   block:
+    # ----- Updated by AROCK - Start - Internal version only in forked branch
+
+    - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
+      ansible.builtin.copy:
+        src: fs_with_cves.sh
+        dest: /var/fs_with_cves.sh
+        owner: root
+        group: root
+        mode: 'u+x,go-wx'
+
+    - name: "1.1.1.9 | PATCH | Ensure afs kernel module is not available | Edit modprobe config"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install afs(\\s|$)"
+        line: "install afs /bin/true"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.9 | PATCH | Ensure afs kernel module is not available | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist afs(\\s|$)"
+        line: "blacklist afs"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.9 | PATCH | Ensure afs kernel module is not available | Disable afs"
+      when: not system_is_container
+      community.general.modprobe:
+        name: afs
+        state: absent
+
+    - name: "1.1.1.9 | PATCH | Ensure ceph kernel module is not available | Edit modprobe config"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install ceph(\\s|$)"
+        line: "install ceph /bin/true"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.9 | PATCH | Ensure ceph kernel module is not available | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist ceph(\\s|$)"
+        line: "blacklist ceph"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.9 | PATCH | Ensure ceph kernel module is not available | Disable ceph"
+      when: not system_is_container
+      community.general.modprobe:
+        name: ceph
+        state: absent
+
+    - name: "1.1.1.9 | PATCH | Ensure gfs2 kernel module is not available | Edit modprobe config"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install gfs2(\\s|$)"
+        line: "install gfs2 /bin/true"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.9 | PATCH | Ensure gfs2 kernel module is not available | blacklist"
+      ansible.builtin.lineinfile:
+        path: /etc/modprobe.d/blacklist.conf
+        regexp: "^(#)?blacklist gfs2(\\s|$)"
+        line: "blacklist gfs2"
+        create: true
+        mode: 'go-rwx'
+
+    - name: "1.1.1.9 | PATCH | Ensure gfs2 kernel module is not available | Disable gfs2"
+      when: not system_is_container
+      community.general.modprobe:
+        name: gfs2
+        state: absent
+
+    # ----- Updated by AROCK - End    
+    
     - name: "1.1.1.9 | PATCH | Ensure unused filesystems kernel modules are not available | Add discovery script"
       ansible.builtin.copy:
         src: fs_with_cves.sh
