@@ -15,7 +15,22 @@
     path: "/etc/ssh/sshd_config"
     owner: root
     group: root
-    mode: 'go-rwx'
+    mode: 'u-x,go-rwx'
+
+- name: "5.1.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config.d files are configured - gather files"
+  ansible.builtin.find:
+    paths: "/etc/ssh/sshd_config.d/"
+    file_type: file
+    patterns: "*.conf"
+  register: filelist
+
+- name: "5.1.1 | PATCH | Ensure permissions on /etc/ssh/sshd_config.d files are configured - update files"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: root
+    group: root
+    mode: 'u-x,go-rwx'
+  with_items: "{{ filelist.files }}"
 
 - name: "5.1.2 | PATCH | Ensure permissions on SSH private host key files are configured"
   when: rhel9cis_rule_5_1_2
