@@ -25,7 +25,7 @@
     - name: "6.2.1.2 | PATCH | Ensure journald log file access is configured | Default file permissions"
       ansible.builtin.file:
         path: /usr/lib/tmpfiles.d/systemd.conf
-        mode: 'g-wx,o-rwx'
+        mode: 'u-x,g-wx,o-rwx'
 
     - name: "6.2.1.2 | AUDIT | Ensure journald log file access is configured | Check for override file"
       ansible.builtin.stat:
