@@ -6,6 +6,7 @@ rhel9cis_allowed_crypto_policies:
   - 'DEFAULT'
   - 'FUTURE'
   - 'FIPS'
+  - 'AROCKPOLICY'
 
 # Following is left blank for ability to build string
 rhel9cis_crypto_policy_module: ''
